@@ -45,9 +45,11 @@ Our deep learning model predicted RVEF with a mean absolute error of 5.056 perce
 
 
   - `demo.ipynb` - use this Jupyter Notebook to test our deep learning pipeline
-  - `model.py` - model definition
-  - `preprocessing.py` - functions required for preprocessing
   - `license.txt` - details of the license
+  - `model.py` - model definition
+  - `predict.py` - 
+  - `preprocessing.py` - functions required for preprocessing
+  - `requirements.txt` - list of the required python packages
 
 ## Usage
 
