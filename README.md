@@ -51,19 +51,20 @@ Our deep learning model predicted RVEF with a mean absolute error of 5.056 perce
 
 ## Usage
 
-You can try our model in the online Google Colab environment (see below), or locally on your machine using the `predict.py` script.<br>
-To run the code on your machine, you need a GPU with at least 8GB of memory. You also have to install the python packages from the `requirements.txt`.<br>
-You can find the pretrained model weights [here](https://www.dropbox.com/s/d1w0nh1rzclo4ox/full_ensemble_model.pt?dl=1).<br>
-For further information run the following command: <br>
-```
-python predict.py --help
-```  
 
 ### Running the Jupyter Notebook in Google Colab
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/mr-BM/RVEnet-demo/blob/master/demo.ipynb)<br>
 If you want to test our model on a few DICOM files, the most convenient option is to open and run the `demo.ipynb` Jupyter Notebook in Google Colab.
 
-### Running the Code on Your Own System
+### Running the Code Locally on Your Computer
 
-If you want to use our model to evaluate a large number of DICOM files, we recommend to ...
+You may also run our model locally on your computer by following the steps below. We recommend this option if you want to analyze a large number of DICOM files or you wish to substantially modify our code.
+1) Create a virtual environment and install the python packages listed in `requirements.txt`
+2) Download model weights from [here](https://www.dropbox.com/s/d1w0nh1rzclo4ox/full_ensemble_model.pt?dl=1)
+3) Run `predict.py`
+
+For further information, please run the following command: <br>
+```
+python predict.py --help
+```  
