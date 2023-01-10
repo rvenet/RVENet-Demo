@@ -60,9 +60,10 @@ If you want to test our model on a few DICOM files, the most convenient option i
 ### Running the Code Locally on Your Computer
 
 You may also run our model locally on your computer by following the steps below. We recommend this option if you want to analyze a large number of DICOM files or you wish to substantially modify our code.
-1) Create a virtual environment and install the python packages listed in `requirements.txt`
-2) Download model weights from [here](https://www.dropbox.com/s/d1w0nh1rzclo4ox/full_ensemble_model.pt?dl=1)
-3) Run `predict.py`
+
+  1) Create a virtual environment and install the python packages listed in `requirements.txt`
+  2) Download the model weights from [here](https://www.dropbox.com/s/d1w0nh1rzclo4ox/full_ensemble_model.pt?dl=1)
+  3) Run `predict.py`
 
 For further information, please run the following command: <br>
 ```
