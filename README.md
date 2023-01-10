@@ -1,4 +1,4 @@
-# RVENet-Demo: A Deep Learning Model for the Prediction of Right Ventricular Ejection Fraction From 2D Echocardiograms
+# A Deep Learning Model for the Prediction of Right Ventricular Ejection Fraction From 2D Echocardiograms
 
 
 The purpose of this repository is to enable the testing of our deep learning model that was developed for estimating right ventricular ejection fraction (RVEF) from 2D apical 4-chamber view echocardiographic videos. For detailed information about our model and the entire data analysis pipeline, please refer to the following paper:
@@ -47,7 +47,7 @@ Our deep learning model predicted RVEF with a mean absolute error of 5.056 perce
   - `demo.ipynb` - use this Jupyter Notebook to test our deep learning pipeline
   - `license.txt` - details of the license
   - `model.py` - model definition
-  - `predict.py` - 
+  - `predict.py` - run this script to predict RVEF
   - `preprocessing.py` - functions required for preprocessing
   - `requirements.txt` - list of the required python packages
 
