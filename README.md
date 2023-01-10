@@ -65,7 +65,7 @@ You may also run our model locally on your computer by following the steps below
 
   1) Create a virtual environment and install the python packages listed in `requirements.txt`
   2) Download the model weights from [here](https://www.dropbox.com/s/d1w0nh1rzclo4ox/full_ensemble_model.pt?dl=1)
-  3) Run `predict.py`
+  3) Run `predict.py` to predict RVEF from apical 4-chamber view echocardiographic videos
 
 For further information, please run the following command: <br>
 ```
