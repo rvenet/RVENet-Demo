@@ -61,13 +61,27 @@ If you want to test our model on a few DICOM files, the most convenient option i
 
 ### Running the Code Locally on Your Computer
 
-You may also run our model locally on your computer by following the steps below. We recommend this option if you want to analyze a large number of DICOM files or you wish to substantially modify our code.
+You may also run our model locally on your computer by following the steps below. We recommend this option if you want to analyze a large number of DICOM files or you wish to substantially modify our code. To run our model, a computer with CUDA-enabled GPU is required.
 
-  1) Create a virtual environment and install the python packages listed in `requirements.txt`
-  2) Download the model weights from [here](https://www.dropbox.com/s/d1w0nh1rzclo4ox/full_ensemble_model.pt?dl=1)
-  3) Run `predict.py` to predict RVEF from apical 4-chamber view echocardiographic videos
+  1) Ensure that the version of CUDA Toolkit installed on your computer supports the version of Pytorch specified in `requirements.txt`
+  2) Create a virtual environment (Python 3.8) and activate it
+  3) Install the python packages listed in `requirements.txt` to the virtual environment
+  4) Download the model weights from [here](https://www.dropbox.com/s/d1w0nh1rzclo4ox/full_ensemble_model.pt?dl=1)
+  5) Run `predict.py` to predict RVEF from apical 4-chamber view echocardiographic videos
 
 For further information, please run the following command: <br>
 ```
 python predict.py --help
-```  
+```
+
+## Contact
+
+
+For inquiries related to the content of this repository, contact Márton Tokodi, M.D., Ph.D. (tok<!--
+-->mar<!--
+-->ton[at]gmail.co<!--
+-->m) and Bálint Magyar, M.Sc. (magy<!--
+-->ar.ba<!--
+-->lint[at]itk.pp<!--
+-->ke.h<!--
+-->u).
