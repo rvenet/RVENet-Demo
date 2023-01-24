@@ -57,7 +57,7 @@ Our deep learning model predicted RVEF with a mean absolute error of 5.056 perce
 ### Running the Jupyter Notebook in Google Colab
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/mr-BM/RVEnet-demo/blob/master/demo.ipynb)<br>
-If you want to test our model on a few DICOM files, the most convenient option is to open and run the `demo.ipynb` Jupyter Notebook in Google Colab.
+If you want to test our model on a few DICOM files, the most convenient option is to open and run the `demo.ipynb` Jupyter Notebook in Google Colab by clicking the Colab badge above.
 
 ### Running the Code Locally on Your Computer
 
@@ -80,7 +80,7 @@ python predict.py --help
 For inquiries related to the content of this repository, contact Márton Tokodi, M.D., Ph.D. (tok<!--
 -->mar<!--
 -->ton[at]gmail.co<!--
--->m) and Bálint Magyar, M.Sc. (magy<!--
+-->m) or Bálint Magyar, M.Sc. (magy<!--
 -->ar.ba<!--
 -->lint[at]itk.pp<!--
 -->ke.h<!--
