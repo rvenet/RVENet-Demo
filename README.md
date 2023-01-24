@@ -77,10 +77,10 @@ python predict.py --help
 ## Contact
 
 
-For inquiries related to the content of this repository, contact Márton Tokodi, M.D., Ph.D. (<font color="#0000EE">tok</font><!--
+For inquiries related to the content of this repository, contact Márton Tokodi, M.D., Ph.D. (tok<!--
 -->mar<!--
 -->ton[at]gmail.co<!--
--->m</u></font>) and Bálint Magyar, M.Sc. (magy<!--
+-->m) and Bálint Magyar, M.Sc. (magy<!--
 -->ar.ba<!--
 -->lint[at]itk.pp<!--
 -->ke.h<!--
