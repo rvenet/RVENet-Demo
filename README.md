@@ -44,12 +44,12 @@ Our deep learning model predicted RVEF with a mean absolute error of 5.056 perce
 ## Contents of the Repository
 
 
-  - `demo.ipynb` - use this Jupyter Notebook to test our deep learning pipeline
   - `license.txt` - details of the license
   - `model.py` - model definition
   - `predict.py` - run this script to predict RVEF
   - `preprocessing.py` - functions required for preprocessing
   - `requirements.txt` - list of the required python packages
+  - `rvenet-demo.ipynb` - use this Jupyter Notebook to test our deep learning pipeline
 
 ## Usage
 
@@ -57,7 +57,7 @@ Our deep learning model predicted RVEF with a mean absolute error of 5.056 perce
 ### Running the Jupyter Notebook in Google Colab
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/mr-BM/RVEnet-demo/blob/master/demo.ipynb)<br>
-If you want to test our model on a few DICOM files, the most convenient option is to open and run the `demo.ipynb` Jupyter Notebook in Google Colab by clicking the <b>Open in Colab</b> badge above.
+If you want to test our model on a few DICOM files, the most convenient option is to open and run the `rvenet-demo.ipynb` Jupyter Notebook in Google Colab by clicking the <b>Open in Colab</b> badge above.
 
 ### Running the Code Locally on Your Computer
 
