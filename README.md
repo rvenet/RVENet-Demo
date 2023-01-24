@@ -48,8 +48,8 @@ Our deep learning model predicted RVEF with a mean absolute error of 5.056 perce
   - `model.py` - model definition
   - `predict.py` - run this script to predict RVEF
   - `preprocessing.py` - functions required for preprocessing
-  - `requirements.txt` - list of the required python packages
-  - `rvenet-demo.ipynb` - use this Jupyter Notebook to test our deep learning pipeline
+  - `requirements.txt` - the list of the required Python packages
+  - `rvenet-demo.ipynb` - a Jupyter Notebook for testing our deep learning model in Google Colab
 
 ## Usage
 
