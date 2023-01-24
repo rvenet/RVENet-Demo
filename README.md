@@ -77,7 +77,7 @@ python predict.py --help
 ## Contact
 
 
-For inquiries related to the content of this repository, contact Márton Tokodi, M.D., Ph.D. (<font color="#0000EE"><u>tok</u></font><!--
+For inquiries related to the content of this repository, contact Márton Tokodi, M.D., Ph.D. (<font color="#0000EE">tok</font><!--
 -->mar<!--
 -->ton[at]gmail.co<!--
 -->m</u></font>) and Bálint Magyar, M.Sc. (magy<!--
