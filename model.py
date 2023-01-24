@@ -7,11 +7,10 @@ from preprocessing import normalize_image_data
 
 class TemporalConvNet_02(nn.Module):
 
-    def __init__(self, features: nn.Module, batch_size, DICOM_frame_nbr, input_image_size, dropout_prob=0.1):
-
+    def __init__(self, features: nn.Module, batch_size, dicom_frame_nbr, input_image_size, dropout_prob=0.1):
         super(TemporalConvNet_02, self).__init__()
 
-        self.frame_nbr = DICOM_frame_nbr
+        self.frame_nbr = dicom_frame_nbr
         self.batch_size = batch_size
         self.dropout_prob = dropout_prob
         self.features = features
@@ -24,12 +23,12 @@ class TemporalConvNet_02(nn.Module):
         feature_out_H = output.size()[2]
         feature_out_W = output.size()[3]
 
-        self.temporal_conv_layer = nn.Conv2d(feature_out_channel * DICOM_frame_nbr, 256, (1, 1))
+        self.temporal_conv_layer = nn.Conv2d(feature_out_channel * dicom_frame_nbr, 256, (1, 1))
         self.batch_norm_conv_layer = nn.BatchNorm2d(256)
         self.FC1 = nn.Linear(256 * feature_out_H * feature_out_W, 1024)
 
         self.dropout = nn.Dropout(self.dropout_prob)
-        
+
         self.batch_norm_FC1 = nn.BatchNorm1d(1024)
 
         self.FC2 = nn.Linear(1024, 1)
@@ -54,7 +53,6 @@ class TemporalConvNet_02(nn.Module):
         return x
 
     def split_dicom_frames(self, input_tensor):
-
         s = list(input_tensor.shape)
         s[0] = int(s[0] / self.frame_nbr)
         s[1] = int(s[1] * self.frame_nbr)
@@ -63,11 +61,12 @@ class TemporalConvNet_02(nn.Module):
         return reshaped_input_tensor
 
     def num_flat_features(self, x):
-        size = x.size()[1:] 
+        size = x.size()[1:]
         num_features = 1
         for s in size:
             num_features *= s
         return num_features
+
 
 class EnsembleHead(nn.Module):
     def __init__(self, num_predictor_models, num_of_classes):
@@ -94,34 +93,30 @@ class EnsembleNet(nn.Module):
         self.head_model = head_model.to(self.device)
         self.base_models_normalization = base_models_normalization
 
-        self.normalization_values = normalization_values 
-
+        self.normalization_values = normalization_values
 
     def forward(self, x):
-        
+
         base_model_outputs = []
 
-        
-        if any(is_norm==True for is_norm in self.base_models_normalization):
-            x_noramlized = normalize_image_data(x, self.normalization_values)
-            x_noramlized = x_noramlized.to(self.device)
+        if any(is_norm for is_norm in self.base_models_normalization):
+            x_normalized = normalize_image_data(x, self.normalization_values)
+            x_normalized = x_normalized.to(self.device)
 
         for idx, model in enumerate(self.base_models):
-            
+
             model = model.to(self.device)
 
             model.eval()
 
-            if self.base_models_normalization[idx]==True:
-                base_model_outputs.append(model(x_noramlized))
+            if self.base_models_normalization[idx]:
+                base_model_outputs.append(model(x_normalized))
             else:
                 base_model_outputs.append(model(x))
-
-        #print("base_model_outputs: {}".format(base_model_outputs))
 
         base_model_outputs = torch.tensor(base_model_outputs)
         base_model_outputs = base_model_outputs.to(device='cuda')
 
-        output = self.head_model(base_model_outputs)       
+        output = self.head_model(base_model_outputs)
 
         return output

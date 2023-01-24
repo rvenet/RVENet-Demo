@@ -8,127 +8,144 @@ from skimage import transform
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
+
 def normalize_image_data(tensor_frames, normalization_values):
     """
-    Function for normalizing a sequency of images. 
+    Normalizes a sequence of frames.
 
     Parameters
     ----------
-    tensor_frames : torch tensor
-        images in torch tensor format
-    fps : float
-        2D echo video frames per second property. If None is given as input, the code
-        tries to extract it automatically from the dicom  
-    normalization_values : list of floats
-        a list of [average, std] describing the tarining data distribution
+    tensor_frames : torch.Tensor
+        Original frames
+    normalization_values : list
+        A list of [mean, std] describing the distribution of the data used for training
 
     Returns
     -------
-    normalized_frames : torch tensor
-        normalized images in torch tensor format
+    normalized_frames : torch.Tensor
+        Normalized frames
     """
     
-    average = normalization_values[0]
+    mean = normalization_values[0]
     std = normalization_values[1]
 
     normalized_frames = []
-
     for frame in tensor_frames:
         frame = frame.cpu().numpy()
         binary_mask = frame[0]
-        frame_copy_one = (frame[1] - float(average)) / float(std)
-        frame_copy_two = (frame[2] - float(average)) / float(std)
+        frame_copy_one = (frame[1] - float(mean)) / float(std)
+        frame_copy_two = (frame[2] - float(mean)) / float(std)
         merged_frame_data = [binary_mask, frame_copy_one, frame_copy_two]
         normalized_frames.append(merged_frame_data)
 
     return torch.tensor(np.array(normalized_frames))
 
-def get_preprocessed_frames(path, fps, hr, orientation):
+
+def get_preprocessed_frames(dicom_file_path, fps=None, hr=None, orientation="Mayo"):
     """
-    Preprocessing code for dicoms containing raw 2D echocardiography data as well as other meta data.
+    Reads and preprocesses data from the DICOM file.
 
     Parameters
     ----------
-    path : string
-        full path of the dicom file
+    dicom_file_path : str
+        Path of the dicom file
     fps : float
-        2D echo video frames per second property. If None is given as input, the code
-        tries to extract it automatically from the dicom  
+        Frame rate of the echocardiographic video. If None is given as input, the code
+        tries to extract it from the DICOM tags.
     hr : float
-        heart rate of the patient. If None is given as input, the code
-        tries to extract it automatically from the dicom
-    orientation : string
-        either "Stanford" or "Mayo"    
+        Heart rate of the patient. If None is given as input, the code
+        tries to extract it from the DICOM tags.
+    orientation : str
+        Orientation of the left and right ventricles ("Stanford" or "Mayo").
+        Mayo – the right ventricle on the right and the left ventricle on the left side.
+        Stanford – the left ventricle on the right and the right ventricle on the left side.
     
     Returns
     -------
-    sampled_frames_from_all_cardiac_cycles_tensor : torch tensor
-        sampled images from all cardiac cycles in torch tensor format
+    sampled_frames_from_all_cardiac_cycles_tensor : torch.Tensor
+        Sampled frames from all cardiac cycles
     """
 
-    # Set the minimum number of frames required for analysis
+    # Defining the minimum number of frames required for analysis
     min_number_of_frames = 20
 
-    # Define the range of acceptable HR values
+    # Defining the range of acceptable heart rate values
     min_hr = 30
     max_hr = 150
 
-    # Set the number of frames to be sampled from each cardiac cycle
+    # Setting the number of frames to be sampled from each cardiac cycle
     num_of_frames_to_sample = 20
 
-    # Load data from DICOM file
-    dataset = pydicom.dcmread(path, force=True)
+    # Loading data from DICOM file
+    dicom_dataset = pydicom.dcmread(dicom_file_path, force=False)
 
-    # Extract HR from DICOM tags if not provided by the user
+    # Ensuring that the DICOM file is a video (i.e., it has >1 frames)
+    if hasattr(dicom_dataset, "NumberOfFrames"):
+        if dicom_dataset.NumberOfFrames < 2:
+            raise ValueError("DICOM file has <2 frames!")
+    else:
+        raise AttributeError("No NumberOfFrames DICOM tag!")
+
+    # Ensuring that the DICOM file does not have color Doppler
+    if hasattr(dicom_dataset, "UltrasoundColorDataPresent"):
+        if dicom_dataset.UltrasoundColorDataPresent:
+            raise ValueError("DICOM file with color Doppler!")
+
+    # Ensuring that the DICOM file contains only one ultrasound region
+    if hasattr(dicom_dataset, "SequenceOfUltrasoundRegions"):
+        if len(dicom_dataset.SequenceOfUltrasoundRegions) > 1:
+            raise ValueError("DICOM file contains more than 1 US regions!")
+
+    # Extracting heart rate from DICOM tags if not provided by the user
     if hr is None:
-        if not hasattr(dataset, 'HeartRate'):
-            raise ValueError('HR was not found in DICOM tags!')
+        if not hasattr(dicom_dataset, "HeartRate"):
+            raise ValueError("Heart rate was not found in DICOM tags!")
         else:
-            hr = dataset.HeartRate
+            hr = dicom_dataset.HeartRate
 
-    # Check whether HR falls into the predefined range
+    # Checking whether heart rate falls into the predefined range
     if hr < min_hr or hr > max_hr:
-        raise ValueError('HR falls outside of the predefined range ({} - {}/min)'.format(min_hr, max_hr))
+        raise ValueError("Heart rate falls outside of the predefined range ({} - {}/min)".format(min_hr, max_hr))
 
-    # Extract FPS from DICOM tags if not provided by the user
+    # Extracting frame rate from DICOM tags if not provided by the user
     if fps is None:
-        if hasattr(dataset, 'RecommendedDisplayFrameRate'):
-            fps = dataset.RecommendedDisplayFrameRate
-        elif hasattr(dataset, 'FrameTime'):
-            fps = round(1000 / float(dataset.FrameTime))
+        if hasattr(dicom_dataset, "RecommendedDisplayFrameRate"):
+            fps = dicom_dataset.RecommendedDisplayFrameRate
+        elif hasattr(dicom_dataset, "FrameTime"):
+            fps = round(1000 / float(dicom_dataset.FrameTime))
         else:
-            raise ValueError('FPS was not found in DICOM tags!')
+            raise ValueError("Frame rate was not found in DICOM tags!")
 
-    # Extract the number of frames from DICOM tags
-    num_of_frames = dataset.NumberOfFrames
+    # Extracting the number of frames from DICOM tags
+    num_of_frames = dicom_dataset.NumberOfFrames
 
-    # Check whether the video has enough frames
+    # Checking whether the video has enough frames
     if num_of_frames < min_number_of_frames:
-        raise ValueError('There are less than {} frames in the video!'.format(min_number_of_frames))
+        raise ValueError("There are less than {} frames in the video!".format(min_number_of_frames))
 
-    # Calculate the estimated length of a cardiac cycle
+    # Calculating the estimated length of a cardiac cycle
     len_of_cardiac_cycle = (60 / int(hr)) * int(float(fps))
 
-    # Check whether the video contains at least one cardiac cycle
+    # Checking whether the video contains at least one cardiac cycle
     if num_of_frames < len_of_cardiac_cycle:
-        raise ValueError('The video is shorter than one cardiac cycle!')
+        raise ValueError("The video is shorter than one cardiac cycle!")
 
-    # Convert frames to grayscale
-    gray_frames = dataset.pixel_array[:, :, :, 0]
+    # Converting frames to grayscale
+    gray_frames = dicom_dataset.pixel_array[:, :, :, 0]
 
-    # Flip video if it has Stanford orientation
-    if orientation == 'Stanford':
+    # Flipping video if it has Stanford orientation
+    if orientation == "Stanford":
         for i, frame in enumerate(gray_frames):
             gray_frames[i] = cv2.flip(frame, 1)
 
-    # Motion based filtering
+    # Performing motion-based filtering
     shape_of_frames = gray_frames.shape
     changes = np.zeros((shape_of_frames[1], shape_of_frames[2]))
     changes_frequency = np.zeros((shape_of_frames[1], shape_of_frames[2]))
     binary_mask = np.zeros((shape_of_frames[1], shape_of_frames[2]))
     cropped_frames = []
 
-    # Count pixel changing intensity and frequency
+    # Computing the extent and frequency of changes in pixel intensity values
     for i in range(len(gray_frames) - 1):
         diff = abs(gray_frames[i] - gray_frames[i + 1])
         changes += diff
@@ -136,9 +153,9 @@ def get_preprocessed_frames(path, fps, hr, orientation):
         changes_frequency[nonzero[0], nonzero[1]] += 1
 
     max_of_changes = np.amax(changes)
-    min_of_changes = np.min(changes)
+    min_of_changes = np.amin(changes)
 
-    # Normalize pixel changing values
+    # Normalizing pixel changing values
     for r in range(len(changes)):
         for p in range(len(changes[r])):
             if int(changes_frequency[r][p]) < 10:
@@ -148,17 +165,16 @@ def get_preprocessed_frames(path, fps, hr, orientation):
 
     nonzero_values_for_binary_mask = np.nonzero(changes)
 
-    # Create binary mask based on the pixel changing values, using morpohlogy
+    # Generating a binary mask based on changes of pixel intensities
     binary_mask[nonzero_values_for_binary_mask[0], nonzero_values_for_binary_mask[1]] += 1
     kernel = np.ones((5, 5), np.int32)
     erosion_on_binary_msk = cv2.erode(binary_mask, kernel, iterations=1)
     binary_mask_after_erosion = np.where(erosion_on_binary_msk, binary_mask, 0)
-
     nonzero_values_after_erosion = np.nonzero(binary_mask_after_erosion)
     binary_mask_coordinates = np.array([nonzero_values_after_erosion[0], nonzero_values_after_erosion[1]]).T
     binary_mask_coordinates = list(map(tuple, binary_mask_coordinates))
     
-    # Crop image based on binary mask
+    # Cropping the binary mask and the frames
     bbox = BoundingBox(binary_mask_coordinates)
     cropped_mask = binary_mask_after_erosion[int(bbox.min_point.x):int(bbox.max_point.x),
                                              int(bbox.min_point.y):int(bbox.max_point.y)]
@@ -175,7 +191,7 @@ def get_preprocessed_frames(path, fps, hr, orientation):
                                      int(bbox.min_point.y):int(bbox.max_point.y)]
         cropped_frames.append(cropped_image)
 
-    # Sample frames from each cardiac cycle
+    # Sampling frames from each cardiac cycle
     sampled_indices_from_all_cardiac_cycles = []
     largest_index = 1
     while True:
@@ -190,10 +206,11 @@ def get_preprocessed_frames(path, fps, hr, orientation):
     sampled_frames_from_all_cardiac_cycles = []
     for sampled_indices_from_one_cardiac_cycle in sampled_indices_from_all_cardiac_cycles:
 
-        # Use indices to select frames
-        sampled_frames_from_one_cardiac_cycle = [cropped_frames[i - 1] for i in sampled_indices_from_one_cardiac_cycle]
+        # Using indices to select frames
+        sampled_frames_from_one_cardiac_cycle = \
+            [cropped_frames[i - 1] for i in sampled_indices_from_one_cardiac_cycle]
 
-        # Resize frames and the binary mask
+        # Resizing the frames and the binary mask
         resized_frames = []
         for frame in sampled_frames_from_one_cardiac_cycle:
             resized_frame = transform.resize(frame, (224, 224))
@@ -201,7 +218,7 @@ def get_preprocessed_frames(path, fps, hr, orientation):
         resized_frames = np.asarray(resized_frames)
         resized_binary_mask = transform.resize(cropped_mask, (224, 224))
 
-        # Convert 1-channel frames to 3-channel frames
+        # Converting 1-channel frames to 3-channel frames
         frames_3ch = []
         for frame in resized_frames:
             new_frame = np.zeros((np.array(frame).shape[0], np.array(frame).shape[1], 3))
@@ -210,14 +227,14 @@ def get_preprocessed_frames(path, fps, hr, orientation):
             new_frame[:, :, 2] = frame
             frames_3ch.append(new_frame)
 
-        # Convert data to Tensor
+        # Converting data to torch Tensor
         frames_tensor = np.array(frames_3ch)
         frames_tensor = frames_tensor.transpose((0, 3, 1, 2))
         binary_mask_tensor = np.array(resized_binary_mask)
         frames_tensor = torch.from_numpy(frames_tensor)
         binary_mask_tensor = torch.from_numpy(binary_mask_tensor)
 
-        # Expand the Tensor containing the frames
+        # Expanding the Tensor containing the frames
         f, c, h, w = frames_tensor.size()
         new_shape = (f, 3, h, w)
 
