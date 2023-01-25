@@ -62,7 +62,7 @@ If you want to test our model on a few DICOM files, the most convenient option i
 
 ### Running the Code Locally on Your Computer
 
-You may also run our model locally on your computer by following the steps below. We recommend this option if you want to analyze a large number of DICOM files or you wish to substantially modify our code. To run our model, a computer with CUDA-enabled GPU is required.
+You may also run our model locally on your computer by following the steps below. We recommend this option if you want to analyze a large number of DICOM files or you wish to substantially modify our code. To run our model, a computer with a CUDA-enabled GPU is required.
 
   1) Ensure that the version of CUDA Toolkit installed on your computer supports the version of Pytorch specified in `requirements.txt`
   2) Create a virtual environment (Python 3.8) and activate it
