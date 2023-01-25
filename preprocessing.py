@@ -9,7 +9,7 @@ from skimage import transform
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 
-def normalize_image_data(tensor_frames, normalization_values):
+def normalize_frames(tensor_frames, normalization_values):
     """
     Normalizes a sequence of frames.
 

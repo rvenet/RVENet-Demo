@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from preprocessing import normalize_image_data
+from preprocessing import normalize_frames
 
 
 class TemporalConvNet_02(nn.Module):
@@ -100,7 +100,7 @@ class EnsembleNet(nn.Module):
         base_model_outputs = []
 
         if any(is_norm for is_norm in self.base_models_normalization):
-            x_normalized = normalize_image_data(x, self.normalization_values)
+            x_normalized = normalize_frames(x, self.normalization_values)
             x_normalized = x_normalized.to(self.device)
 
         for idx, model in enumerate(self.base_models):
