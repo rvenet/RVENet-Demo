@@ -44,7 +44,7 @@ Our deep learning model predicted RVEF with a mean absolute error of 5.056 perce
 ## Contents of the Repository
 
 
-  - `LICENSE.md` - details of the license
+  - `LICENSE.md` - details of the license (GNU General Public License Version 3.0)
   - `README.md` - text file that introduces the project and explains the content of this repository
   - `model.py` - model definition
   - `predict.py` - run this script to predict RVEF
