@@ -108,7 +108,7 @@ def predict_rvef(dicom_folder, model_path, output_folder, orientation):
 
     # Checking if there is a CUDA-enabled GPU available (This is required for running our model!)
     if torch.cuda.is_available():
-        device = "cuda:0"
+        device = torch.device("cuda:0")
     else:
         # Printing error message to console and log file
         msg_list = [datetime.now().strftime("%m-%d-%Y %H:%M:%S"), "No CUDA-enabled GPU is available!"]
