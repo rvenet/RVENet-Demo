@@ -4,7 +4,7 @@
 The purpose of this repository is to enable the testing of our deep learning model that was developed for estimating right ventricular ejection fraction (RVEF) from 2D apical 4-chamber view echocardiographic videos. For detailed information about our model and the entire data analysis pipeline, please refer to the following paper:
 
 > [**Deep Learning-Based Prediction of Right Ventricular Ejection Fraction Using 2D Echocardiograms**](https://rvenet.github.io/dataset/)<br/>
-  Márton Tokodi, Bálint Magyar, András Soós, Masaaki Takeuchi, Máté Tolvaj, Bálint K. Lakatos, Tetsuji Kitano, Yosuke Nabeshima, Alexandra Fábián, Mark B. Szigeti, András Horváth, Béla Merkely, and Attila Kovács. (<b>under review</b>)
+  Márton Tokodi, Bálint Magyar, András Soós, Masaaki Takeuchi, Máté Tolvaj, Bálint K. Lakatos, Tetsuji Kitano, Yosuke Nabeshima, Alexandra Fábián, Mark B. Szigeti, András Horváth, Béla Merkely, and Attila Kovács. <b>JACC Cardiovasc Imaging</b> (2023)
 
 ## Clinical Significance
 
@@ -66,7 +66,7 @@ You may also run our model locally on your computer by following the steps below
 
   1) Ensure that the version of the CUDA Toolkit installed on your computer supports the version of PyTorch specified in `requirements.txt`
   2) Create a virtual environment (Python 3.8) and activate it
-  3) Install the python packages listed in `requirements.txt` to the virtual environment
+  3) Install the python packages listed in `requirements.txt` in the virtual environment
   4) Download the model weights from [here](https://www.dropbox.com/s/d1w0nh1rzclo4ox/full_ensemble_model.pt?dl=1)
   5) Run `predict.py` to predict RVEF from apical 4-chamber view echocardiographic videos
 
