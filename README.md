@@ -67,7 +67,7 @@ You may also run our model locally on your computer by following the steps below
 
   1) Ensure that the version of the CUDA Toolkit installed on your computer supports the version of PyTorch specified in `requirements.txt`
   2) Create a virtual environment (Python 3.8) and activate it
-  3) Install the python packages listed in `requirements.txt` in the virtual environment
+  3) Install the required python packages (listed in `requirements.txt`) in the virtual environment
   4) Download the model weights from [here](https://www.dropbox.com/s/d1w0nh1rzclo4ox/full_ensemble_model.pt?dl=1)
   5) Run `predict.py` to predict RVEF from apical 4-chamber view echocardiographic videos
 
