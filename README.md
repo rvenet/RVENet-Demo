@@ -5,7 +5,7 @@ The purpose of this repository is to enable the testing of our deep learning mod
 
 > [**Deep Learning-Based Prediction of Right Ventricular Ejection Fraction Using 2D Echocardiograms**](https://doi.org/10.1016/j.jcmg.2023.02.017)<br/>
   Márton Tokodi, Bálint Magyar, András Soós, Masaaki Takeuchi, Máté Tolvaj, Bálint K. Lakatos, Tetsuji Kitano, Yosuke Nabeshima, Alexandra Fábián, Mark B. Szigeti, András Horváth, Béla Merkely, and Attila Kovács<br/>
-  <b>JACC Cardiovasc Imaging</b> (2023)
+  <b>JACC: Cardiovascular Imaging</b> (2023)
 
 ## Clinical Significance
 
