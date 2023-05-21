@@ -2,8 +2,11 @@ import torch
 import numpy as np
 import cv2
 import pydicom
+#from planar import BoundingBox
 from PIL import ImageFile
 from skimage import transform
+
+from boundingboxes import BoundingBox
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
