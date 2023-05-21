@@ -2,7 +2,7 @@ numpy==1.22.3
 opencv-python==4.5.1.48
 pandas==1.4.2
 Pillow==9.3.0
-planar==0.4
+#planar==0.4
 pydicom==2.2.2
 scikit-image==0.18.1
 --find-links https://download.pytorch.org/whl/torch_stable.html
