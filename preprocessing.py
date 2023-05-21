@@ -174,12 +174,10 @@ def get_preprocessed_frames(dicom_file_path, fps=None, hr=None, orientation="May
     binary_mask_after_erosion = np.where(erosion_on_binary_msk, binary_mask, 0)
     nonzero_values_after_erosion = np.nonzero(binary_mask_after_erosion)
     binary_mask_coordinates = np.array([nonzero_values_after_erosion[0], nonzero_values_after_erosion[1]]).T
-    binary_mask_coordinates = list(map(tuple, binary_mask_coordinates))
     
     # Cropping the binary mask and the frames
-    bbox = BoundingBox(binary_mask_coordinates)
-    cropped_mask = binary_mask_after_erosion[int(bbox.min_point.x):int(bbox.max_point.x),
-                                             int(bbox.min_point.y):int(bbox.max_point.y)]
+    cropped_mask = binary_mask_after_erosion[np.min(binary_mask_coordinates[:,0]):np.max(binary_mask_coordinates[:,0]),
+                                             np.min(binary_mask_coordinates[:,1]):np.max(binary_mask_coordinates[:,1])]
 
     for row in cropped_mask:
         ids = [i for i, x in enumerate(row) if x == 1]
@@ -189,8 +187,8 @@ def get_preprocessed_frames(dicom_file_path, fps=None, hr=None, orientation="May
 
     for i in range(len(gray_frames)):
         masked_image = np.where(erosion_on_binary_msk, gray_frames[i], 0)
-        cropped_image = masked_image[int(bbox.min_point.x):int(bbox.max_point.x),
-                                     int(bbox.min_point.y):int(bbox.max_point.y)]
+        cropped_image = masked_image[np.min(binary_mask_coordinates[:,0]):np.max(binary_mask_coordinates[:,0]),
+                                     np.min(binary_mask_coordinates[:,1]):np.max(binary_mask_coordinates[:,1])]
         cropped_frames.append(cropped_image)
 
     # Sampling frames from each cardiac cycle
